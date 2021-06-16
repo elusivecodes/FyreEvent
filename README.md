@@ -38,7 +38,7 @@ Events::clear();
 
 Add an event.
 
-- `$name` is the event name.
+- `$name` is a string representing the event name.
 - `$callback` is the callback to execute.
 - `$priority` is the callback priority, and will default to  *Events::PRIORITY_NORMAL*.
 
@@ -50,7 +50,7 @@ Events::on($name, $callback, $priority);
 
 Remove event(s).
 
-- `$name` is the event name.
+- `$name` is a string representing the event name.
 - `$callback` is the callback to remove.
 
 ```php
@@ -67,7 +67,7 @@ Events::remove($name);
 
 Trigger an event.
 
-- `$name` is the event name.
+- `$name` is a string representing the event name.
 
 Any additional arguments supplied will be passed to the event callback.
 
