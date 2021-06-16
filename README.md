@@ -40,7 +40,7 @@ Add an event.
 
 - `$name` is a string representing the event name.
 - `$callback` is the callback to execute.
-- `$priority` is the callback priority, and will default to  *Events::PRIORITY_NORMAL*.
+- `$priority` is a number representing the callback priority, and will default to *Events::PRIORITY_NORMAL*.
 
 ```php
 Events::on($name, $callback, $priority);
