@@ -1,6 +1,6 @@
 {
-    "name": "fyre/events",
-    "description": "An events library.",
+    "name": "fyre/event",
+    "description": "An event library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Fyre\\": "src/"
+            "Fyre\\Event\\": "src/"
         }
     },
     "autoload-dev": {

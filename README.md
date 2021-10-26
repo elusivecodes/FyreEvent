@@ -1,6 +1,6 @@
-# FyreEvents
+# FyreEvent
 
-**FyreEvents** is a free, events library for *PHP*.
+**FyreEvent** is a free, events library for *PHP*.
 
 
 ## Table Of Contents
@@ -14,13 +14,13 @@
 **Using Composer**
 
 ```
-composer install fyre/events
+composer install fyre/event
 ```
 
 In PHP:
 
 ```php
-use Fyre\Events;
+use Fyre\Event\Event;
 ```
 
 
@@ -31,7 +31,7 @@ use Fyre\Events;
 Clear all events.
 
 ```php
-Events::clear();
+Event::clear();
 ```
 
 **On**
@@ -43,7 +43,7 @@ Add an event.
 - `$priority` is a number representing the callback priority, and will default to *Events::PRIORITY_NORMAL*.
 
 ```php
-Events::on($name, $callback, $priority);
+Event::on($name, $callback, $priority);
 ```
 
 **Remove**
@@ -54,13 +54,13 @@ Remove event(s).
 - `$callback` is the callback to remove.
 
 ```php
-Events::remove($name, $callback);
+Event::remove($name, $callback);
 ```
 
 If the `$callback` argument is omitted, all events will be removed instead.
 
 ```php
-Events::remove($name);
+Event::remove($name);
 ```
 
 **Trigger**
@@ -72,5 +72,5 @@ Trigger an event.
 Any additional arguments supplied will be passed to the event callback.
 
 ```php
-Events::trigger($name, ...$args);
+Event::trigger($name, ...$args);
 ```

@@ -4,88 +4,88 @@ declare(strict_types=1);
 namespace Tests;
 
 use
-    Fyre\Events,
+    Fyre\Event\Event,
     PHPUnit\Framework\TestCase;
 
-final class EventsTest extends TestCase
+final class EventTest extends TestCase
 {
 
     private int $i = 0;
     private int $j = 0;
 
-    public function testEventsTrigger(): void
+    public function testEventTrigger(): void
     {
-        Events::on('test1', function() {
+        Event::on('test1', function() {
             $this->i++;
         });
-        Events::on('test2', function() {
+        Event::on('test2', function() {
             $this->j++;
         });
 
-        Events::trigger('test1');
+        Event::trigger('test1');
 
         $this->assertEquals(1, $this->i);
         $this->assertEquals(0, $this->j);
     }
 
-    public function testEventsTriggerPriority(): void
+    public function testEventTriggerPriority(): void
     {
-        Events::on('test', function() {
+        Event::on('test', function() {
             if ($this->j > 0) {
                 $this->i++;
             }
         });
-        Events::on('test', function() {
+        Event::on('test', function() {
             $this->j++;
-        }, Events::PRIORITY_HIGH);
+        }, Event::PRIORITY_HIGH);
 
-        Events::trigger('test');
+        Event::trigger('test');
 
         $this->assertEquals(1, $this->i);
         $this->assertEquals(1, $this->j);
     }
 
-    public function testEventsTriggerArguments(): void
+    public function testEventTriggerArguments(): void
     {
-        Events::on('test', function($a, $b) {
+        Event::on('test', function($a, $b) {
             if ($b) {
                 $this->i += $a;
             }
         });
 
-        Events::trigger('test', 2, true);
+        Event::trigger('test', 2, true);
 
         $this->assertEquals(2, $this->i);
     }
 
-    public function testEventsRemove(): void
+    public function testEventRemove(): void
     {
-        Events::on('test', function() {
+        Event::on('test', function() {
             $this->i++;
         });
-        Events::on('test', function() {
+        Event::on('test', function() {
             $this->i++;
         });
 
-        Events::remove('test');
-        Events::trigger('test');
+        Event::remove('test');
+        Event::trigger('test');
 
         $this->assertEquals(0, $this->i);
     }
 
-    public function testEventsRemoveCallback(): void
+    public function testEventRemoveCallback(): void
     {
         $callback = function() {
             $this->i++;
         };
 
-        Events::on('test', $callback);
-        Events::on('test', function() {
+        Event::on('test', $callback);
+        Event::on('test', function() {
             $this->j++;
         });
 
-        Events::remove('test', $callback);
-        Events::trigger('test');
+        Event::remove('test', $callback);
+        Event::trigger('test');
 
         $this->assertEquals(0, $this->i);
         $this->assertEquals(1, $this->j);
@@ -93,7 +93,7 @@ final class EventsTest extends TestCase
 
     protected function setUp(): void
     {
-        Events::clear();
+        Event::clear();
         $this->i = 0;
         $this->j = 0;
     }

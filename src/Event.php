@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fyre;
+namespace Fyre\Event;
 
 use function
     array_filter,
@@ -11,9 +11,9 @@ use function
     uasort;
 
 /**
- * Events
+ * Event
  */
-class Events
+class Event
 {
 
     const PRIORITY_LOW = 200;
