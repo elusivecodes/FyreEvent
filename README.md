@@ -14,7 +14,7 @@
 **Using Composer**
 
 ```
-composer install fyre/event
+composer require fyre/event
 ```
 
 In PHP:
