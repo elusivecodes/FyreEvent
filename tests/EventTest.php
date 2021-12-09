@@ -13,7 +13,7 @@ final class EventTest extends TestCase
     private int $i = 0;
     private int $j = 0;
 
-    public function testEventTrigger(): void
+    public function testTrigger(): void
     {
         Event::on('test1', function() {
             $this->i++;
@@ -28,7 +28,7 @@ final class EventTest extends TestCase
         $this->assertEquals(0, $this->j);
     }
 
-    public function testEventTriggerPriority(): void
+    public function testTriggerPriority(): void
     {
         Event::on('test', function() {
             if ($this->j > 0) {
@@ -45,7 +45,7 @@ final class EventTest extends TestCase
         $this->assertEquals(1, $this->j);
     }
 
-    public function testEventTriggerArguments(): void
+    public function testTriggerArguments(): void
     {
         Event::on('test', function($a, $b) {
             if ($b) {
@@ -58,7 +58,7 @@ final class EventTest extends TestCase
         $this->assertEquals(2, $this->i);
     }
 
-    public function testEventRemove(): void
+    public function testRemove(): void
     {
         Event::on('test', function() {
             $this->i++;
@@ -73,7 +73,7 @@ final class EventTest extends TestCase
         $this->assertEquals(0, $this->i);
     }
 
-    public function testEventRemoveCallback(): void
+    public function testRemoveCallback(): void
     {
         $callback = function() {
             $this->i++;
