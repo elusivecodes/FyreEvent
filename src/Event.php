@@ -34,15 +34,15 @@ class Event
      * Add an event.
      * @param string $name The event name.
      * @param callable $callback The callback.
-     * @param int $priority The event priority.
+     * @param int|null $priority The event priority.
      */
-    public static function on(string $name, callable $callback, int $priority = self::PRIORITY_NORMAL): void
+    public static function on(string $name, callable $callback, int|null $priority = null): void
     {
         static::$listeners[$name] ??= [];
 
         static::$listeners[$name][] = [
             'callback' => $callback,
-            'priority' => $priority
+            'priority' => $priority ?? static::PRIORITY_NORMAL
         ];
 
         static::sort($name);
