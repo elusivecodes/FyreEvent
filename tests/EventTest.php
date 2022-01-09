@@ -24,8 +24,8 @@ final class EventTest extends TestCase
 
         Event::trigger('test1');
 
-        $this->assertEquals(1, $this->i);
-        $this->assertEquals(0, $this->j);
+        $this->assertSame(1, $this->i);
+        $this->assertSame(0, $this->j);
     }
 
     public function testTriggerPriority(): void
@@ -41,8 +41,8 @@ final class EventTest extends TestCase
 
         Event::trigger('test');
 
-        $this->assertEquals(1, $this->i);
-        $this->assertEquals(1, $this->j);
+        $this->assertSame(1, $this->i);
+        $this->assertSame(1, $this->j);
     }
 
     public function testTriggerArguments(): void
@@ -55,7 +55,7 @@ final class EventTest extends TestCase
 
         Event::trigger('test', 2, true);
 
-        $this->assertEquals(2, $this->i);
+        $this->assertSame(2, $this->i);
     }
 
     public function testRemove(): void
@@ -70,7 +70,7 @@ final class EventTest extends TestCase
         Event::remove('test');
         Event::trigger('test');
 
-        $this->assertEquals(0, $this->i);
+        $this->assertSame(0, $this->i);
     }
 
     public function testRemoveCallback(): void
@@ -87,8 +87,8 @@ final class EventTest extends TestCase
         Event::remove('test', $callback);
         Event::trigger('test');
 
-        $this->assertEquals(0, $this->i);
-        $this->assertEquals(1, $this->j);
+        $this->assertSame(0, $this->i);
+        $this->assertSame(1, $this->j);
     }
 
     protected function setUp(): void
