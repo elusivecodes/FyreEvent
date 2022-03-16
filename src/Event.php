@@ -70,7 +70,7 @@ class Event
 
         static::$listeners[$name] = array_filter(
             static::$listeners[$name],
-            fn($value) => $value['callback'] !== $callback
+            fn(array $value): bool => $value['callback'] !== $callback
         );
 
         $postCount = count(static::$listeners[$name]);
@@ -115,7 +115,7 @@ class Event
     {
         uasort(
             static::$listeners[$name],
-            fn($a, $b) => $a['priority'] - $b['priority']
+            fn(array $a, array $b): int => $a['priority'] - $b['priority']
         );
     }
 
