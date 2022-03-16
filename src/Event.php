@@ -92,7 +92,7 @@ class Event
      * @param mixed ...$args The event arguments.
      * @return bool FALSE if the event was cancelled, otherwise TRUE. 
      */
-    public static function trigger(string $name, ...$args): bool
+    public static function trigger(string $name, mixed ...$args): bool
     {
         if (!array_key_exists($name, static::$listeners)) {
             return true;
