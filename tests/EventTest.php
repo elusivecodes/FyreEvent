@@ -3,15 +3,91 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use
-    Fyre\Event\Event,
-    PHPUnit\Framework\TestCase;
+use Fyre\Event\Event;
+use PHPUnit\Framework\TestCase;
 
 final class EventTest extends TestCase
 {
 
     private int $i = 0;
     private int $j = 0;
+
+    public function testHas(): void
+    {
+        Event::on('test', function() {
+            $this->i++;
+        });
+
+        $this->assertTrue(
+            Event::has('test')
+        );
+    }
+
+    public function testHasInvalid(): void
+    {
+        $this->assertFalse(
+            Event::has('test')
+        );
+    }
+
+    public function testOff(): void
+    {
+        Event::on('test', function() {
+            $this->i++;
+        });
+        Event::on('test', function() {
+            $this->i++;
+        });
+
+        $this->assertTrue(
+            Event::off('test')
+        );
+
+        Event::trigger('test');
+
+        $this->assertSame(0, $this->i);
+    }
+
+    public function testOffCallback(): void
+    {
+        $callback = function() {
+            $this->i++;
+        };
+
+        Event::on('test', $callback);
+        Event::on('test', function() {
+            $this->j++;
+        });
+
+        $this->assertTrue(
+            Event::off('test', $callback)
+        );
+
+        Event::trigger('test');
+
+        $this->assertSame(0, $this->i);
+        $this->assertSame(1, $this->j);
+    }
+
+    public function testOffInvalid(): void
+    {
+        $this->assertFalse(
+            Event::off('test')
+        );
+    }
+
+    public function testOffCallbackInvalid(): void
+    {
+        Event::on('test', function() {
+            $this->i++;
+        });
+
+        $this->assertFalse(
+            Event::off('test', function() {
+                $this->j++;
+            })
+        );
+    }
 
     public function testTrigger(): void
     {
@@ -56,39 +132,6 @@ final class EventTest extends TestCase
         Event::trigger('test', 2, true);
 
         $this->assertSame(2, $this->i);
-    }
-
-    public function testRemove(): void
-    {
-        Event::on('test', function() {
-            $this->i++;
-        });
-        Event::on('test', function() {
-            $this->i++;
-        });
-
-        Event::remove('test');
-        Event::trigger('test');
-
-        $this->assertSame(0, $this->i);
-    }
-
-    public function testRemoveCallback(): void
-    {
-        $callback = function() {
-            $this->i++;
-        };
-
-        Event::on('test', $callback);
-        Event::on('test', function() {
-            $this->j++;
-        });
-
-        Event::remove('test', $callback);
-        Event::trigger('test');
-
-        $this->assertSame(0, $this->i);
-        $this->assertSame(1, $this->j);
     }
 
     protected function setUp(): void

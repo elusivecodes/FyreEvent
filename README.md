@@ -1,6 +1,6 @@
 # FyreEvent
 
-**FyreEvent** is a free, events library for *PHP*.
+**FyreEvent** is a free, open-source events library for *PHP*.
 
 
 ## Table Of Contents
@@ -34,19 +34,17 @@ Clear all events.
 Event::clear();
 ```
 
-**On**
+**Has**
 
-Add an event.
+Check if an event exists.
 
 - `$name` is a string representing the event name.
-- `$callback` is the callback to execute.
-- `$priority` is a number representing the callback priority, and will default to *Events::PRIORITY_NORMAL*.
 
 ```php
-Event::on($name, $callback, $priority);
+$hasEvent = Event::has($name);
 ```
 
-**Remove**
+**Off**
 
 Remove event(s).
 
@@ -54,13 +52,25 @@ Remove event(s).
 - `$callback` is the callback to remove.
 
 ```php
-Event::remove($name, $callback);
+$removed = Event::off($name, $callback);
 ```
 
 If the `$callback` argument is omitted, all events will be removed instead.
 
 ```php
-Event::remove($name);
+Event::off($name);
+```
+
+**On**
+
+Add an event.
+
+- `$name` is a string representing the event name.
+- `$callback` is the callback to execute.
+- `$priority` is a number representing the callback priority, and will default to *Event::PRIORITY_NORMAL*.
+
+```php
+Event::on($name, $callback, $priority);
 ```
 
 **Trigger**
