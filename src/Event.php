@@ -11,7 +11,7 @@ use function uasort;
 /**
  * Event
  */
-class Event
+abstract class Event
 {
 
     const PRIORITY_LOW = 200;
