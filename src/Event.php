@@ -5,7 +5,6 @@ namespace Fyre\Event;
 
 use function array_key_exists;
 use function call_user_func_array;
-use function count;
 use function uasort;
 
 /**
