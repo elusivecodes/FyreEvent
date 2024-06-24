@@ -8,9 +8,15 @@ use PHPUnit\Framework\TestCase;
 
 final class EventTest extends TestCase
 {
-
     private int $i = 0;
     private int $j = 0;
+
+    protected function setUp(): void
+    {
+        Event::clear();
+        $this->i = 0;
+        $this->j = 0;
+    }
 
     public function testHas(): void
     {
@@ -69,13 +75,6 @@ final class EventTest extends TestCase
         $this->assertSame(1, $this->j);
     }
 
-    public function testOffInvalid(): void
-    {
-        $this->assertFalse(
-            Event::off('test')
-        );
-    }
-
     public function testOffCallbackInvalid(): void
     {
         Event::on('test', function() {
@@ -86,6 +85,13 @@ final class EventTest extends TestCase
             Event::off('test', function() {
                 $this->j++;
             })
+        );
+    }
+
+    public function testOffInvalid(): void
+    {
+        $this->assertFalse(
+            Event::off('test')
         );
     }
 
@@ -104,6 +110,19 @@ final class EventTest extends TestCase
         $this->assertSame(0, $this->j);
     }
 
+    public function testTriggerArguments(): void
+    {
+        Event::on('test', function($a, $b) {
+            if ($b) {
+                $this->i += $a;
+            }
+        });
+
+        Event::trigger('test', 2, true);
+
+        $this->assertSame(2, $this->i);
+    }
+
     public function testTriggerPriority(): void
     {
         Event::on('test', function() {
@@ -120,25 +139,4 @@ final class EventTest extends TestCase
         $this->assertSame(1, $this->i);
         $this->assertSame(1, $this->j);
     }
-
-    public function testTriggerArguments(): void
-    {
-        Event::on('test', function($a, $b) {
-            if ($b) {
-                $this->i += $a;
-            }
-        });
-
-        Event::trigger('test', 2, true);
-
-        $this->assertSame(2, $this->i);
-    }
-
-    protected function setUp(): void
-    {
-        Event::clear();
-        $this->i = 0;
-        $this->j = 0;
-    }
-
 }

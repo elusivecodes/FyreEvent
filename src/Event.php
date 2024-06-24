@@ -12,10 +12,9 @@ use function uasort;
  */
 abstract class Event
 {
-
-    const PRIORITY_LOW = 200;
-    const PRIORITY_NORMAL = 100;
-    const PRIORITY_HIGH = 10;
+    public const PRIORITY_HIGH = 10;
+    public const PRIORITY_LOW = 200;
+    public const PRIORITY_NORMAL = 100;
 
     protected static array $events = [];
 
@@ -58,7 +57,7 @@ abstract class Event
         $hasEvent = false;
         $newEvents = [];
 
-        foreach (static::$events[$name] AS $event) {
+        foreach (static::$events[$name] as $event) {
             if ($event['callback'] === $callback) {
                 $hasEvent |= true;
                 continue;
@@ -105,7 +104,7 @@ abstract class Event
      * Trigger an event.
      * @param string $name The event name.
      * @param mixed ...$args The event arguments.
-     * @return bool FALSE if the event was cancelled, otherwise TRUE. 
+     * @return bool FALSE if the event was cancelled, otherwise TRUE.
      */
     public static function trigger(string $name, mixed ...$args): bool
     {
@@ -113,7 +112,7 @@ abstract class Event
             return true;
         }
 
-        foreach (static::$events[$name] AS $listener) {
+        foreach (static::$events[$name] as $listener) {
             if (call_user_func_array($listener['callback'], $args) === false) {
                 return false;
             }
@@ -121,5 +120,4 @@ abstract class Event
 
         return true;
     }
-
 }
