@@ -9,14 +9,8 @@ use PHPUnit\Framework\TestCase;
 final class EventTest extends TestCase
 {
     private int $i = 0;
-    private int $j = 0;
 
-    protected function setUp(): void
-    {
-        Event::clear();
-        $this->i = 0;
-        $this->j = 0;
-    }
+    private int $j = 0;
 
     public function testHas(): void
     {
@@ -138,5 +132,12 @@ final class EventTest extends TestCase
 
         $this->assertSame(1, $this->i);
         $this->assertSame(1, $this->j);
+    }
+
+    protected function setUp(): void
+    {
+        Event::clear();
+        $this->i = 0;
+        $this->j = 0;
     }
 }

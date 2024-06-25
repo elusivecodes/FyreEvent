@@ -13,7 +13,9 @@ use function uasort;
 abstract class Event
 {
     public const PRIORITY_HIGH = 10;
+
     public const PRIORITY_LOW = 200;
+
     public const PRIORITY_NORMAL = 100;
 
     protected static array $events = [];
@@ -28,6 +30,7 @@ abstract class Event
 
     /**
      * Determine whether an event exists.
+     *
      * @param string $name The event name.
      * @return bool TRUE if the event exists, otherwise FALSE.
      */
@@ -38,6 +41,7 @@ abstract class Event
 
     /**
      * Remove an event.
+     *
      * @param string $name The event name.
      * @param callable|null $callback The callback.
      * @return bool TRUE if the event was removed, otherwise FALSE.
@@ -60,6 +64,7 @@ abstract class Event
         foreach (static::$events[$name] as $event) {
             if ($event['callback'] === $callback) {
                 $hasEvent |= true;
+
                 continue;
             }
 
@@ -81,6 +86,7 @@ abstract class Event
 
     /**
      * Add an event.
+     *
      * @param string $name The event name.
      * @param callable $callback The callback.
      * @param int|null $priority The event priority.
@@ -91,7 +97,7 @@ abstract class Event
 
         static::$events[$name][] = [
             'callback' => $callback,
-            'priority' => $priority ?? static::PRIORITY_NORMAL
+            'priority' => $priority ?? static::PRIORITY_NORMAL,
         ];
 
         uasort(
@@ -102,6 +108,7 @@ abstract class Event
 
     /**
      * Trigger an event.
+     *
      * @param string $name The event name.
      * @param mixed ...$args The event arguments.
      * @return bool FALSE if the event was cancelled, otherwise TRUE.
