@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Fyre\Event;
 
+use Closure;
+
 use function array_key_exists;
-use function call_user_func_array;
 use function uasort;
 
 /**
@@ -120,7 +121,7 @@ abstract class Event
         }
 
         foreach (static::$events[$name] as $listener) {
-            if (call_user_func_array($listener['callback'], $args) === false) {
+            if (Closure::fromCallable($listener['callback'])(...$args) === false) {
                 return false;
             }
         }
