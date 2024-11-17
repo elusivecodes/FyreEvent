@@ -5,6 +5,7 @@
 
 ## Table Of Contents
 - [Installation](#installation)
+- [Basic Usage](#basic-usage)
 - [Methods](#methods)
 
 
@@ -24,6 +25,13 @@ use Fyre\Event\Event;
 ```
 
 
+## Basic Usage
+
+```php
+$event = new Event();
+```
+
+
 ## Methods
 
 **Clear**
@@ -31,7 +39,7 @@ use Fyre\Event\Event;
 Clear all events.
 
 ```php
-Event::clear();
+$event->clear();
 ```
 
 **Has**
@@ -41,7 +49,7 @@ Check if an event exists.
 - `$name` is a string representing the event name.
 
 ```php
-$hasEvent = Event::has($name);
+$hasEvent = $event->has($name);
 ```
 
 **Off**
@@ -52,13 +60,13 @@ Remove event(s).
 - `$callback` is the callback to remove.
 
 ```php
-$removed = Event::off($name, $callback);
+$removed = $event->off($name, $callback);
 ```
 
 If the `$callback` argument is omitted, all events will be removed instead.
 
 ```php
-Event::off($name);
+$event->off($name);
 ```
 
 **On**
@@ -70,7 +78,7 @@ Add an event.
 - `$priority` is a number representing the callback priority, and will default to *Event::PRIORITY_NORMAL*.
 
 ```php
-Event::on($name, $callback, $priority);
+$event->on($name, $callback, $priority);
 ```
 
 **Trigger**
@@ -82,5 +90,5 @@ Trigger an event.
 Any additional arguments supplied will be passed to the event callback.
 
 ```php
-Event::trigger($name, ...$args);
+$event->trigger($name, ...$args);
 ```

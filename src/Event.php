@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace Fyre\Event;
 
-use Closure;
-
 use function array_key_exists;
 use function uasort;
 
 /**
  * Event
  */
-abstract class Event
+class Event
 {
     public const PRIORITY_HIGH = 10;
 
@@ -19,14 +17,14 @@ abstract class Event
 
     public const PRIORITY_NORMAL = 100;
 
-    protected static array $events = [];
+    protected array $events = [];
 
     /**
      * Clear all events.
      */
-    public static function clear(): void
+    public function clear(): void
     {
-        static::$events = [];
+        $this->events = [];
     }
 
     /**
@@ -35,9 +33,9 @@ abstract class Event
      * @param string $name The event name.
      * @return bool TRUE if the event exists, otherwise FALSE.
      */
-    public static function has(string $name): bool
+    public function has(string $name): bool
     {
-        return array_key_exists($name, static::$events);
+        return array_key_exists($name, $this->events);
     }
 
     /**
@@ -47,14 +45,14 @@ abstract class Event
      * @param callable|null $callback The callback.
      * @return bool TRUE if the event was removed, otherwise FALSE.
      */
-    public static function off(string $name, callable|null $callback = null): bool
+    public function off(string $name, callable|null $callback = null): bool
     {
-        if (!array_key_exists($name, static::$events)) {
+        if (!array_key_exists($name, $this->events)) {
             return false;
         }
 
         if ($callback === null) {
-            unset(static::$events[$name]);
+            unset($this->events[$name]);
 
             return true;
         }
@@ -62,7 +60,7 @@ abstract class Event
         $hasEvent = false;
         $newEvents = [];
 
-        foreach (static::$events[$name] as $event) {
+        foreach ($this->events[$name] as $event) {
             if ($event['callback'] === $callback) {
                 $hasEvent |= true;
 
@@ -77,9 +75,9 @@ abstract class Event
         }
 
         if ($newEvents === []) {
-            unset(static::$events[$name]);
+            unset($this->events[$name]);
         } else {
-            static::$events[$name] = $newEvents;
+            $this->events[$name] = $newEvents;
         }
 
         return true;
@@ -92,17 +90,17 @@ abstract class Event
      * @param callable $callback The callback.
      * @param int|null $priority The event priority.
      */
-    public static function on(string $name, callable $callback, int|null $priority = null): void
+    public function on(string $name, callable $callback, int|null $priority = null): void
     {
-        static::$events[$name] ??= [];
+        $this->events[$name] ??= [];
 
-        static::$events[$name][] = [
+        $this->events[$name][] = [
             'callback' => $callback,
             'priority' => $priority ?? static::PRIORITY_NORMAL,
         ];
 
         uasort(
-            static::$events[$name],
+            $this->events[$name],
             fn(array $a, array $b): int => $a['priority'] <=> $b['priority']
         );
     }
@@ -114,14 +112,14 @@ abstract class Event
      * @param mixed ...$args The event arguments.
      * @return bool FALSE if the event was cancelled, otherwise TRUE.
      */
-    public static function trigger(string $name, mixed ...$args): bool
+    public function trigger(string $name, mixed ...$args): bool
     {
-        if (!array_key_exists($name, static::$events)) {
+        if (!array_key_exists($name, $this->events)) {
             return true;
         }
 
-        foreach (static::$events[$name] as $listener) {
-            if (Closure::fromCallable($listener['callback'])(...$args) === false) {
+        foreach ($this->events[$name] as $listener) {
+            if ($listener['callback'](...$args) === false) {
                 return false;
             }
         }

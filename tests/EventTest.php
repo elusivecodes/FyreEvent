@@ -8,42 +8,44 @@ use PHPUnit\Framework\TestCase;
 
 final class EventTest extends TestCase
 {
+    protected Event $event;
+
     private int $i = 0;
 
     private int $j = 0;
 
     public function testHas(): void
     {
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             $this->i++;
         });
 
         $this->assertTrue(
-            Event::has('test')
+            $this->event->has('test')
         );
     }
 
     public function testHasInvalid(): void
     {
         $this->assertFalse(
-            Event::has('test')
+            $this->event->has('test')
         );
     }
 
     public function testOff(): void
     {
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             $this->i++;
         });
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             $this->i++;
         });
 
         $this->assertTrue(
-            Event::off('test')
+            $this->event->off('test')
         );
 
-        Event::trigger('test');
+        $this->event->trigger('test');
 
         $this->assertSame(0, $this->i);
     }
@@ -54,16 +56,16 @@ final class EventTest extends TestCase
             $this->i++;
         };
 
-        Event::on('test', $callback);
-        Event::on('test', function() {
+        $this->event->on('test', $callback);
+        $this->event->on('test', function() {
             $this->j++;
         });
 
         $this->assertTrue(
-            Event::off('test', $callback)
+            $this->event->off('test', $callback)
         );
 
-        Event::trigger('test');
+        $this->event->trigger('test');
 
         $this->assertSame(0, $this->i);
         $this->assertSame(1, $this->j);
@@ -71,12 +73,12 @@ final class EventTest extends TestCase
 
     public function testOffCallbackInvalid(): void
     {
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             $this->i++;
         });
 
         $this->assertFalse(
-            Event::off('test', function() {
+            $this->event->off('test', function() {
                 $this->j++;
             })
         );
@@ -85,20 +87,20 @@ final class EventTest extends TestCase
     public function testOffInvalid(): void
     {
         $this->assertFalse(
-            Event::off('test')
+            $this->event->off('test')
         );
     }
 
     public function testTrigger(): void
     {
-        Event::on('test1', function() {
+        $this->event->on('test1', function() {
             $this->i++;
         });
-        Event::on('test2', function() {
+        $this->event->on('test2', function() {
             $this->j++;
         });
 
-        Event::trigger('test1');
+        $this->event->trigger('test1');
 
         $this->assertSame(1, $this->i);
         $this->assertSame(0, $this->j);
@@ -106,29 +108,29 @@ final class EventTest extends TestCase
 
     public function testTriggerArguments(): void
     {
-        Event::on('test', function($a, $b) {
+        $this->event->on('test', function($a, $b) {
             if ($b) {
                 $this->i += $a;
             }
         });
 
-        Event::trigger('test', 2, true);
+        $this->event->trigger('test', 2, true);
 
         $this->assertSame(2, $this->i);
     }
 
     public function testTriggerPriority(): void
     {
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             if ($this->j > 0) {
                 $this->i++;
             }
         });
-        Event::on('test', function() {
+        $this->event->on('test', function() {
             $this->j++;
         }, Event::PRIORITY_HIGH);
 
-        Event::trigger('test');
+        $this->event->trigger('test');
 
         $this->assertSame(1, $this->i);
         $this->assertSame(1, $this->j);
@@ -136,7 +138,8 @@ final class EventTest extends TestCase
 
     protected function setUp(): void
     {
-        Event::clear();
+        $this->event = new Event();
+
         $this->i = 0;
         $this->j = 0;
     }
