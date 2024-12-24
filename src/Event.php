@@ -3,127 +3,164 @@ declare(strict_types=1);
 
 namespace Fyre\Event;
 
-use function array_key_exists;
-use function uasort;
-
 /**
  * Event
  */
 class Event
 {
-    public const PRIORITY_HIGH = 10;
+    protected array $data;
 
-    public const PRIORITY_LOW = 200;
+    protected bool $defaultPrevented = false;
 
-    public const PRIORITY_NORMAL = 100;
+    protected string $name;
 
-    protected array $events = [];
+    protected bool $propagationStopped = false;
+
+    protected mixed $result = null;
+
+    protected bool $stopped = false;
+
+    protected object|null $subject;
 
     /**
-     * Clear all events.
+     * New Event constructor.
      */
-    public function clear(): void
+    public function __construct(string $name, object|null $subject = null, array $data = [])
     {
-        $this->events = [];
+        $this->name = $name;
+        $this->subject = $subject;
+        $this->data = $data;
     }
 
     /**
-     * Determine whether an event exists.
+     * Get the Event data.
      *
-     * @param string $name The event name.
-     * @return bool TRUE if the event exists, otherwise FALSE.
+     * @return array The Event data.
      */
-    public function has(string $name): bool
+    public function getData(): array
     {
-        return array_key_exists($name, $this->events);
+        return $this->data;
     }
 
     /**
-     * Remove an event.
+     * Get the Event name.
      *
-     * @param string $name The event name.
-     * @param callable|null $callback The callback.
-     * @return bool TRUE if the event was removed, otherwise FALSE.
+     * @return array The Event name.
      */
-    public function off(string $name, callable|null $callback = null): bool
+    public function getName(): string
     {
-        if (!array_key_exists($name, $this->events)) {
-            return false;
-        }
-
-        if ($callback === null) {
-            unset($this->events[$name]);
-
-            return true;
-        }
-
-        $hasEvent = false;
-        $newEvents = [];
-
-        foreach ($this->events[$name] as $event) {
-            if ($event['callback'] === $callback) {
-                $hasEvent |= true;
-
-                continue;
-            }
-
-            $newEvents[] = $event;
-        }
-
-        if (!$hasEvent) {
-            return false;
-        }
-
-        if ($newEvents === []) {
-            unset($this->events[$name]);
-        } else {
-            $this->events[$name] = $newEvents;
-        }
-
-        return true;
+        return $this->name;
     }
 
     /**
-     * Add an event.
+     * Get the Event result.
      *
-     * @param string $name The event name.
-     * @param callable $callback The callback.
-     * @param int|null $priority The event priority.
+     * @return mixed The Event result.
      */
-    public function on(string $name, callable $callback, int|null $priority = null): void
+    public function getResult(): mixed
     {
-        $this->events[$name] ??= [];
-
-        $this->events[$name][] = [
-            'callback' => $callback,
-            'priority' => $priority ?? static::PRIORITY_NORMAL,
-        ];
-
-        uasort(
-            $this->events[$name],
-            fn(array $a, array $b): int => $a['priority'] <=> $b['priority']
-        );
+        return $this->result;
     }
 
     /**
-     * Trigger an event.
+     * Get the Event subject.
      *
-     * @param string $name The event name.
-     * @param mixed ...$args The event arguments.
-     * @return bool FALSE if the event was cancelled, otherwise TRUE.
+     * @return object|null The Event subject.
      */
-    public function trigger(string $name, mixed ...$args): bool
+    public function getSubject(): object|null
     {
-        if (!array_key_exists($name, $this->events)) {
-            return true;
-        }
+        return $this->subject;
+    }
 
-        foreach ($this->events[$name] as $listener) {
-            if ($listener['callback'](...$args) === false) {
-                return false;
-            }
-        }
+    /**
+     * Determine whether the default Event should occur.
+     *
+     * @return bool TRUE if the default Event should not occur, otherwise FALSE.
+     */
+    public function isDefaultPrevented(): bool
+    {
+        return $this->defaultPrevented;
+    }
 
-        return true;
+    /**
+     * Determine whether the Event propagation was stopped.
+     *
+     * @return bool TRUE if the Event propagation was stopped, otherwise FALSE.
+     */
+    public function isPropagationStopped(): bool
+    {
+        return $this->propagationStopped;
+    }
+
+    /**
+     * Determine whether the Event was stopped.
+     *
+     * @return bool TRUE if the Event was stopped, otherwise FALSE.
+     */
+    public function isStopped(): bool
+    {
+        return $this->stopped;
+    }
+
+    /**
+     * Prevent the default Event.
+     *
+     * @return Event The Event.
+     */
+    public function preventDefault(): static
+    {
+        $this->defaultPrevented = true;
+
+        return $this;
+    }
+
+    /**
+     * Set the Event data.
+     *
+     * @param array $data The Event data.
+     * @return Event The Event.
+     */
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Set the Event result.
+     *
+     * @param mixed $result The Event result.
+     * @return Event The Event.
+     */
+    public function setResult(mixed $result): static
+    {
+        $this->result = $result;
+
+        return $this;
+    }
+
+    /**
+     * Stop the Event propagating immediately.
+     *
+     * @return Event The Event.
+     */
+    public function stopImmediatePropagation(): static
+    {
+        $this->stopped = true;
+
+        return $this->stopPropagation();
+    }
+
+    /**
+     * Stop the Event propagating.
+     *
+     * @return Event The Event.
+     */
+    public function stopPropagation(): static
+    {
+        $this->propagationStopped = true;
+
+        return $this;
     }
 }
