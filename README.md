@@ -138,9 +138,10 @@ use Fyre\Event\Event;
 - `$name` is a string representing the name of the *Event* .
 - `$subject` is an object representing the *Event* subject, and will default to *null*.
 - `$data` is an array containing the *Event* data, and will default to *[]*.
+- `$cancelable` is a boolean indicating whether the event can be cancelled, and will default to *true*.
 
 ```php
-$event = new Event($name, $subject, $data);
+$event = new Event($name, $subject, $data, $cancelable);
 ```
 
 **Get Data**
@@ -282,9 +283,10 @@ Dispatch an [*Event*](#events).
 - `$name` is a string representing the event name.
 - `$data` is an array containing the *Event* data, and will default to *[]*.
 - `$subject` is an object representing the *Event* subject, and will default to the event dispatcher.
+- `$cancelable` is a boolean indicating whether the event can be cancelled, and will default to *true*.
 
 ```php
-$this->dispatchEvent($name, $data, $subject).
+$this->dispatchEvent($name, $data, $subject, $cancelable);
 ```
 
 **Get Event Manager**

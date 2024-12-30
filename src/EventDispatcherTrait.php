@@ -15,13 +15,14 @@ trait EventDispatcherTrait
      *
      * @param string $name The Event name.
      * @param array $data The Event data.
+     * @param bool $cancelable Whether the Event is cancelable.
      * @param object|null $subject The Event subject.
      */
-    public function dispatchEvent(string $name, array $data = [], object|null $subject = null): Event
+    public function dispatchEvent(string $name, array $data = [], bool $cancelable = true, object|null $subject = null): Event
     {
         $subject ??= $this;
 
-        $event = new Event($name, $subject, $data);
+        $event = new Event($name, $subject, $data, $cancelable);
 
         return $this->getEventManager()->dispatch($event);
     }

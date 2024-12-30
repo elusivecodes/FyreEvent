@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Fyre\Event\Event;
 use Fyre\Event\EventManager;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Tests\Mock\MockDispatcher;
 
 final class EventDispatcherTest extends TestCase
@@ -29,6 +31,19 @@ final class EventDispatcherTest extends TestCase
         $this->assertSame(['a' => 1], $event->getData());
 
         $this->assertTrue($ran);
+    }
+
+    public function testDispatchUncancelableEvent(): void
+    {
+        $this->expectException(RuntimeException::class);
+
+        $eventManager = $this->dispatcher->getEventManager();
+
+        $eventManager->on('test', function(Event $event): void {
+            $event->preventDefault();
+        });
+
+        $event = $this->dispatcher->dispatchEvent('test', cancelable: false);
     }
 
     public function testGetEventManager(): void

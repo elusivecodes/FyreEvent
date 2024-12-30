@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Fyre\Event;
 
+use RuntimeException;
+
 /**
  * Event
  */
 class Event
 {
+    protected bool $cancelable = true;
+
     protected array $data;
 
     protected bool $defaultPrevented = false;
@@ -24,12 +28,18 @@ class Event
 
     /**
      * New Event constructor.
+     *
+     * @param string $name The Event name.
+     * @param object|null $subject The Event subject.
+     * @param array $data The Event data.
+     * @param bool $cancelable Whether the Event is cancelable.
      */
-    public function __construct(string $name, object|null $subject = null, array $data = [])
+    public function __construct(string $name, object|null $subject = null, array $data = [], bool $cancelable = true)
     {
         $this->name = $name;
         $this->subject = $subject;
         $this->data = $data;
+        $this->cancelable = $cancelable;
     }
 
     /**
@@ -106,9 +116,15 @@ class Event
      * Prevent the default Event.
      *
      * @return Event The Event.
+     *
+     * @throws RuntimeException if the event can not be cancelled.
      */
     public function preventDefault(): static
     {
+        if (!$this->cancelable) {
+            throw new RuntimeException('Event can not be cancelled: '.$this->name);
+        }
+
         $this->defaultPrevented = true;
 
         return $this;
