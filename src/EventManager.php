@@ -24,17 +24,14 @@ class EventManager
 
     protected array $events = [];
 
-    protected EventManager|null $parentEventManager = null;
-
     /**
      * New EventManager constructor.
      *
      * @param EventManager|null $parentEventManager The parent EventManager.
      */
-    public function __construct(EventManager|null $parentEventManager = null)
-    {
-        $this->parentEventManager = $parentEventManager;
-    }
+    public function __construct(
+        protected EventManager|null $parentEventManager = null
+    ) {}
 
     /**
      * Add an EventListener.

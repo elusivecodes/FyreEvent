@@ -10,21 +10,13 @@ use RuntimeException;
  */
 class Event
 {
-    protected bool $cancelable = true;
-
-    protected array $data;
-
     protected bool $defaultPrevented = false;
-
-    protected string $name;
 
     protected bool $propagationStopped = false;
 
     protected mixed $result = null;
 
     protected bool $stopped = false;
-
-    protected object|null $subject;
 
     /**
      * New Event constructor.
@@ -34,13 +26,12 @@ class Event
      * @param array $data The Event data.
      * @param bool $cancelable Whether the Event is cancelable.
      */
-    public function __construct(string $name, object|null $subject = null, array $data = [], bool $cancelable = true)
-    {
-        $this->name = $name;
-        $this->subject = $subject;
-        $this->data = $data;
-        $this->cancelable = $cancelable;
-    }
+    public function __construct(
+        protected string $name,
+        protected object|null $subject = null,
+        protected array $data = [],
+        protected bool $cancelable = true
+    ) {}
 
     /**
      * Get the Event data.
