@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Event;
 
 use Closure;
+use Fyre\Utility\Traits\MacroTrait;
 
 use function array_key_exists;
 use function array_values;
@@ -16,6 +17,8 @@ use function uasort;
  */
 class EventManager
 {
+    use MacroTrait;
+
     public const PRIORITY_HIGH = 10;
 
     public const PRIORITY_LOW = 200;

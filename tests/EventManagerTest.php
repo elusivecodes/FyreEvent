@@ -5,9 +5,12 @@ namespace Tests;
 
 use Fyre\Event\Event;
 use Fyre\Event\EventManager;
+use Fyre\Utility\Traits\MacroTrait;
 use PHPUnit\Framework\TestCase;
 use Tests\Mock\MockListener;
 use Tests\Mock\MockPriorityListener;
+
+use function class_uses;
 
 final class EventManagerTest extends TestCase
 {
@@ -197,6 +200,14 @@ final class EventManagerTest extends TestCase
     {
         $this->assertFalse(
             $this->eventManager->has('test')
+        );
+    }
+
+    public function testMacroable(): void
+    {
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(EventManager::class)
         );
     }
 
