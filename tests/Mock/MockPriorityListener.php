@@ -28,7 +28,7 @@ class MockPriorityListener implements EventListenerInterface
 
     public function setResult(Event $event, mixed $result): void
     {
-        $event->stopImmediatePropagation();
+        $event->stopPropagation();
 
         $this->result = $result;
     }

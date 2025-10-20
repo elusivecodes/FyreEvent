@@ -137,7 +137,7 @@ final class EventManagerTest extends TestCase
         $this->assertFalse($ran);
     }
 
-    public function testEventStopImmediatePropagation(): void
+    public function testEventStopPropagation(): void
     {
         $eventManager = new EventManager($this->eventManager);
 
@@ -150,30 +150,8 @@ final class EventManagerTest extends TestCase
             $ran = true;
         });
         $eventManager->on('test', function(Event $event): void {
-            $event->stopImmediatePropagation();
-        }, EventManager::PRIORITY_HIGH);
-
-        $event = $eventManager->trigger('test');
-
-        $this->assertFalse(
-            $event->isDefaultPrevented()
-        );
-
-        $this->assertFalse($ran);
-    }
-
-    public function testEventStopPropagation(): void
-    {
-        $eventManager = new EventManager($this->eventManager);
-
-        $ran = false;
-
-        $this->eventManager->on('test', function() use (&$ran): void {
-            $ran = true;
-        });
-        $eventManager->on('test', function(Event $event): void {
             $event->stopPropagation();
-        });
+        }, EventManager::PRIORITY_HIGH);
 
         $event = $eventManager->trigger('test');
 

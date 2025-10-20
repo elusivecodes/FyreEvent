@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Fyre\Event;
 
+use Fyre\Utility\Traits\MacroTrait;
 use RuntimeException;
 
 /**
@@ -10,13 +11,13 @@ use RuntimeException;
  */
 class Event
 {
+    use MacroTrait;
+
     protected bool $defaultPrevented = false;
 
     protected bool $propagationStopped = false;
 
     protected mixed $result = null;
-
-    protected bool $stopped = false;
 
     /**
      * New Event constructor.
@@ -94,16 +95,6 @@ class Event
     }
 
     /**
-     * Determine whether the Event was stopped.
-     *
-     * @return bool TRUE if the Event was stopped, otherwise FALSE.
-     */
-    public function isStopped(): bool
-    {
-        return $this->stopped;
-    }
-
-    /**
      * Prevent the default Event.
      *
      * @return Event The Event.
@@ -145,18 +136,6 @@ class Event
         $this->result = $result;
 
         return $this;
-    }
-
-    /**
-     * Stop the Event propagating immediately.
-     *
-     * @return Event The Event.
-     */
-    public function stopImmediatePropagation(): static
-    {
-        $this->stopped = true;
-
-        return $this->stopPropagation();
     }
 
     /**

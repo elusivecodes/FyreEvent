@@ -6,6 +6,7 @@ namespace Fyre\Event;
 use Closure;
 use Fyre\Utility\Traits\MacroTrait;
 
+use function array_column;
 use function array_key_exists;
 use function array_values;
 use function is_array;
@@ -26,6 +27,8 @@ class EventManager
     public const PRIORITY_NORMAL = 100;
 
     protected array $events = [];
+
+    protected array $sortedEvents = [];
 
     /**
      * New EventManager constructor.
@@ -71,20 +74,33 @@ class EventManager
     {
         $name = $event->getName();
 
-        if (!array_key_exists($name, $this->events)) {
-            return $event;
+        if (array_key_exists($name, $this->sortedEvents)) {
+            $listeners = $this->sortedEvents[$name];
+        } else if (array_key_exists($name, $this->events)) {
+            $listeners = $this->events[$name] ?? [];
+
+            uasort(
+                $listeners,
+                static fn(array $a, array $b): int => $a['priority'] <=> $b['priority']
+            );
+
+            $listeners = array_column($listeners, 'callback');
+
+            $this->sortedEvents[$name] = $listeners;
+        } else {
+            $listeners = [];
         }
 
-        foreach ($this->events[$name] as $listener) {
-            if ($event->isStopped()) {
+        foreach ($listeners as $listener) {
+            if ($event->isPropagationStopped()) {
                 break;
             }
 
-            $result = $listener['callback']($event, ...array_values($event->getData()));
+            $result = $listener($event, ...array_values($event->getData()));
 
             if ($result === false) {
                 $event->preventDefault();
-                $event->stopImmediatePropagation();
+                $event->stopPropagation();
             }
 
             if ($result !== null) {
@@ -122,6 +138,8 @@ class EventManager
         if (!array_key_exists($name, $this->events)) {
             return $this;
         }
+
+        unset($this->sortedEvents[$name]);
 
         if ($callback === null) {
             unset($this->events[$name]);
@@ -165,10 +183,7 @@ class EventManager
             'priority' => $priority ?? static::PRIORITY_NORMAL,
         ];
 
-        uasort(
-            $this->events[$name],
-            fn(array $a, array $b): int => $a['priority'] <=> $b['priority']
-        );
+        unset($this->sortedEvents[$name]);
 
         return $this;
     }
