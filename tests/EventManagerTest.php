@@ -187,6 +187,11 @@ final class EventManagerTest extends TestCase
             MacroTrait::class,
             class_uses(EventManager::class)
         );
+
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(Event::class)
+        );
     }
 
     public function testOff(): void
