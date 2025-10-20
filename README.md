@@ -192,14 +192,6 @@ Determine whether the *Event* propagation was stopped.
 $isPropagationStopped = $event->isPropagationStopped();
 ```
 
-**Is Stopped**
-
-Determine whether the *Event* was stopped.
-
-```php
-$isStopped = $event->isStopped();
-```
-
 **Prevent Default**
 
 Prevent the default *Event*.
@@ -222,14 +214,6 @@ $event->setData($data);
 
 ```php
 $event->setResult($result);
-```
-
-**Stop Immediate Propagation**
-
-Stop the *Event* propagating immediately.
-
-```php
-$event->stopImmediatePropagation();
 ```
 
 **Stop Propagation**
